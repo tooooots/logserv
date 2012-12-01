@@ -11,7 +11,7 @@ config
 {
    "port":8080,
    "auth_file":"htpasswd",
-   "logfiles":[
+   "log_files":[
       {"path":"/var/log/system.log", "users":[ "bob", "kevin"]},
 	  {"path":"/var/log/install.log"}]
 }

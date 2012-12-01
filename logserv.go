@@ -23,15 +23,20 @@ func rootHandler(w http.ResponseWriter, r *auth.AuthenticatedRequest) {
 
   <script>
     window.onload = function() {
-        var ws = new WebSocket("ws://websocket");
+        var ws = new WebSocket("ws://localhost:8080/websocket");
 
         ws.onopen = function() {
             ws.send('New participant joined');
-			alert('toto');
+			//alert('toto');
+			$("#chat").append("<div> -- connected --</div>");
         };
 
         ws.onmessage = function (evt)  {
             $("#chat").append("<div>" + evt.data + "</div>");
+        };
+		
+        ws.onclose = function() {
+			$("#chat").append("<div> -- disconnected --</div>");
         };
     };
     </script>
@@ -72,7 +77,9 @@ func main() {
 	err = json.Unmarshal(b, &config)
 	if err != nil { log.Fatal(err) }
 	
-	if config.Port == 0 || config.Auth_file == "" || len(config.Log_files) == 0 { log.Fatal("Invalid configuration") }
+	if config.Port == 0 { log.Fatal("Invalid Port") }
+	if config.Auth_file == "" { log.Fatal("No Auth file specified") }
+	if len(config.Log_files) == 0 { log.Fatal("Invalid logfiles specified") }
 	
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil { log.Fatal(err) }
